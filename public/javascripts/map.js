@@ -7,6 +7,15 @@ L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
 }).addTo(map)
 
-L.marker([-34.59865, -58.457652]).addTo(map);
-L.marker([-34.59952, -58.455822]).addTo(map);
-L.marker([-34.59634, -58.452192]).addTo(map);
+$.ajax({
+    dataType: "json",
+    url: "api/bicicletas",
+    success: function(result){
+        console.log(result);
+        result.bicicletas.forEach((bici) => {
+            L.marker(bici.ubicacion, {title: bici.id}).addTo(map);
+            
+        });
+    }
+});
+
