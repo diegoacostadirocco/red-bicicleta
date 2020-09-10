@@ -29,6 +29,7 @@ exports.Bicicleta_update_post = (req, res) => {
 }
 exports.Bicicleta_update_get = (req, res) => {
     var bici = Bicicleta.findById(req.params.id)
+    
     res.render('bicicletas/update', {bici})
 }
 exports.Bicicleta_delete_post = (req, res) => {
