@@ -37,3 +37,9 @@ describe('Bicicleta.findById', () =>{
         expect(targetBici.modelo).toBe(aBici.modelo);
     });
 });
+// describe('Bicicleta.removeById', () =>{
+//     it('Debe eliminar la bici con id 1', () =>{
+//         expect(Bicicleta.allBicis.length).toBe(0);
+
+//     });
+// });
