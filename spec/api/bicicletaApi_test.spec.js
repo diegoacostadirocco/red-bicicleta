@@ -58,4 +58,54 @@ describe('Bicicleta API', () =>{
     
         });
     });
+
+    describe('PUT BICICLETAS /update', () => {
+        it('STATUS 200', (done) => {
+            var headers = {'Content-Type': 'application/json'};
+
+            var a = new Bicicleta(20, 'rojo', 'urbana', [-19.035444, -65.273607]);
+            Bicicleta.add(a);
+
+            var aBici = { "id": 20, "color": "rojito", "modelo": "urbana", "lat": -54.36, "lng": -74.35 }; //Datos a actualizar
+
+            const options = {
+                url: URL + '/update',
+                headers: headers,
+                json: true,
+                body: aBici
+            };
+            
+            request.put(options, (err, response, body) => {
+                expect(response.statusCode).toBe(200);
+                expect(Bicicleta.findById(20).color).toBe("rojito");
+                done();
+            }); 
+
+        });
+    });
+
+    describe('DELETE BICICLETAS /delete', () => {
+        it('STATUS 204', (done) => {
+            var headers = {'Content-Type': 'application/json'};
+
+            var a = new Bicicleta(30, 'rojo', 'urbana', [-19.035444, -65.273607]);
+            Bicicleta.add(a);
+
+            var aBici = { "id": 30  }; //Dato a borrar
+
+            const options = {
+                url: URL + '/delete',
+                headers: headers,
+                json: true,
+                body: aBici
+            };
+            
+            request.delete(options, (err, response, body) => {
+                expect(response.statusCode).toBe(204);
+                done();
+            }); 
+
+        });
+    });
+    
 });

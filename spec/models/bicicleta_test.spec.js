@@ -54,6 +54,7 @@ describe('Testing Bicicletas', () => {
                 Bicicleta.allBicis((err, bicis) => {
                     expect(bicis.length).toEqual(1);
                     expect(bicis[0].code).toEqual(aBici.code);
+                    done();
                 });
             });
             describe('Bicicleta.findByCode', () => {
@@ -91,7 +92,3 @@ describe('Testing Bicicletas', () => {
         });
     });
 })
-
-// describe('Bicicleta.removeById', () =>{
-//     it('Debe eliminar la bici con id 1', () =>{
-//         expect(Bicicleta.allBicis.length).toBe(0)
