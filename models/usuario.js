@@ -6,7 +6,7 @@ const crypto = require('crypto');
 const saltRounds = 10;
 
 const Token = require ('../models/token');
-const mailer = require ('../mailer/index');
+const mailer = require ('../mailer/mailer');
 
 var Schema = mongoose.Schema;
 

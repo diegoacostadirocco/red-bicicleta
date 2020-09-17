@@ -47,6 +47,34 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.get('/login', (req, res) =>{
+  res.render('session/login');
+});
+
+app.post('/login', (req, res, next) =>{
+  passport.authenticate('local', (err, user, info) =>{
+    if (err) return next(err);
+    if (!usuario) return res.render('session/login', {info});
+    req.logIn(usuario, (err) =>{
+      if (err) return next (err);
+      return res.redirect('/');
+    });
+  }) (req, res, next);
+});
+
+app.get('logout', (req, res) =>{
+  req.logout();
+  res.redirect('/');
+});
+
+app.get('/forgotPassword', (req, res) =>{
+  
+})
+
+app.post('/forgotPassword', (req, res) =>{
+
+})
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/token', tokenRouter);
