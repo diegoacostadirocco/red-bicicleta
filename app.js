@@ -5,7 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const passport = require('./config/passport');
 const session = require('express-session');
-
+const jwt = require('jsonwebtoken');
 
 const Usuario = require('./models/usuario');
 const Token = require('./models/token');
@@ -15,10 +15,15 @@ var tokenRouter = require('./routes/token');
 var bicicletasRouter = require('./routes/bicicletas');
 var bicicletasApiRouter = require('./routes/api/bicicletas');
 var usuariosApiRouter = require('./routes/api/usuarios');
+var authApiRouter = require('./routes/api/auth');
 
 const store = new session.MemoryStore;
 
 var app = express();
+
+app.set('secretKey', 'jwt_pwd_!!223344');
+
+
 app.use(session({
   cookie: { maxAge: 240 * 60 * 60 * 1000},
   store: store,
@@ -67,37 +72,16 @@ app.get('logout', (req, res) =>{
   res.redirect('/');
 });
 
-app.get('/forgotPassword', (req, res) =>{
-  
-})
-
-app.post('/forgotPassword', (req, res) =>{
-
-})
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/token', tokenRouter);
 
-app.use('/bicicletas', bicicletasRouter);
-app.use('/api/bicicletas', bicicletasApiRouter);
+app.use('/bicicletas', loggedIn, bicicletasRouter);
+
+app.use('/api/auth', authApiRouter)
+app.use('/api/bicicletas', validarUsuario, bicicletasApiRouter);
 app.use('/api/usuarios', usuariosApiRouter);
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
-
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
 
 app.get('/forgotPassword', (req, res) =>{
   res.render('session/forgotPassword');
@@ -126,12 +110,11 @@ app.get('/resetPassword/:token', (req, res, next) =>{
       });
     };
     Usuario.findById(token._userId, (err, usuario) => {
-      if (!usuario) {
+      if (!usuario) 
         return res.status(400).send({
           msg:'no existe un usuario asociado al token'
         });
-      };
-      res.render('session/resetPassword', {errors: {}, usuario:usuario});
+        res.render('session/resetPassword', {errors: {}, usuario:usuario});
     });
   });
 });
@@ -162,5 +145,45 @@ app.post('/resetPassword', (req, res) =>{
     })
   });
 });
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  next(createError(404));
+});
+
+// error handler
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
+});
+
+function loggedIn (req, res, next) {
+  if (req.user) {
+    next ();
+  } else {
+    console.log('user sin loguearse');
+    res.redirect('/login');
+  }
+};
+
+function validarUsuario(req, res, next) {
+  jwt.verify(req.headers[`x-access-token`], req.app.get['secretKey'], (err, decoded) =>{
+    if(err){
+      res.json({status:"error", message: err.message, data:null});
+    }else{
+      req.body.userId = decoded.id;
+      console.log(`jwt verify ${decoded}`);
+
+      next();
+    }
+  })
+};
+
+
 
 module.exports = app;
