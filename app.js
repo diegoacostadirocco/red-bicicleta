@@ -56,6 +56,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+app.use("/googlec19a96a7e947ca3b", (req, res) =>{
+  res.sendFile("/public/googlec19a96a7e947ca3b.html");
+});
+
 app.get('/login', (req, res) =>{
   res.render('session/login');
 });
