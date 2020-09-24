@@ -34,6 +34,7 @@ app.use(session({
 }));
 
 var mongoose = require('mongoose');
+const router = require('./routes/index');
 
 
 //mongodb://localhost/red_bicicletas
@@ -81,8 +82,9 @@ app.get('logout', (req, res) =>{
   res.redirect('/');
 });
 
-
-app.use('/', indexRouter);
+app.use(app.router);
+router.initialize(app);
+// app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/token', tokenRouter);
 
