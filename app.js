@@ -20,8 +20,6 @@ var authApiRouter = require('./routes/api/auth');
 
 const Usuario = require('./models/usuario');
 const Token = require('./models/token');
-const store = new session.MemoryStore;
-
 
 let store;
 if (process.env.NODE_ENV === 'development') {
