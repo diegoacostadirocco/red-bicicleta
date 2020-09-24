@@ -82,9 +82,9 @@ app.get('logout', (req, res) =>{
   res.redirect('/');
 });
 
-app.use(app.router);
+// app.use(app.router);
 router.initialize(app);
-// app.use('/', indexRouter);
+app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/token', tokenRouter);
 
